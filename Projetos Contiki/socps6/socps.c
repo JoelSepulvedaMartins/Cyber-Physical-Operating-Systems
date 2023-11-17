@@ -27,7 +27,7 @@ PROCESS_THREAD(socps_process, ev, data)
 
     if(escalonarThreadProcesso2()){
 
-    	  
+    	process_poll(&socps_process2);
     }
 
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
