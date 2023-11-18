@@ -23,7 +23,7 @@ int maxTemperature = 41;
 int minTemperature = 34;
 
 // Sinalizador para controle de recursos compartilhados
-static int alert_in_use = 0;
+//static int alert_in_use = 0;
 //static struct mutex alert_mutex;
 
 // Processo de Monitoramento de BPM
@@ -49,12 +49,12 @@ PROCESS_THREAD(bpm_monitor, ev, data)
     if (bpmTemp > 90)
     {
       sprintf(alertTemp, "Taquicardia: %d Bpm", bpmTemp);
-      process_post(&ALERT, PROCESS_EVENT_MSG, alertTemp);
+      process_post_synch(&ALERT, PROCESS_EVENT_MSG, alertTemp);
     }
     else if (bpmTemp < 50)
     {
       sprintf(alertTemp, "Bradicardia: %d Bpm", bpmTemp);
-      process_post(&ALERT, PROCESS_EVENT_MSG, alertTemp);
+      process_post_synch(&ALERT, PROCESS_EVENT_MSG, alertTemp);
     }
 
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer)); // Aguarda até que o temporizador expire
@@ -86,7 +86,7 @@ PROCESS_THREAD(saturation_monitor, ev, data)
     if (saturationTemp < 90)
     {
       sprintf(alertTemp, "Saturacao Baixa: %d Percent ", saturationTemp);
-      process_post(&ALERT, PROCESS_EVENT_MSG, alertTemp);
+      process_post_synch(&ALERT, PROCESS_EVENT_MSG, alertTemp);
     }
 
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer)); // Aguarda até que o temporizador expire
@@ -118,12 +118,12 @@ PROCESS_THREAD(temperature_monitor, ev, data)
     if (temperatureTemp < 35)
     {
       sprintf(alertTemp, "Hipotermia: %d Celsius", temperatureTemp);
-      process_post(&ALERT, PROCESS_EVENT_MSG, alertTemp);
+      process_post_synch(&ALERT, PROCESS_EVENT_MSG, alertTemp);
     }
     else if (temperatureTemp > 37)
     {
       sprintf(alertTemp, "Febre: %d Celsius", temperatureTemp);
-      process_post(&ALERT, PROCESS_EVENT_MSG, alertTemp);
+      process_post_synch(&ALERT, PROCESS_EVENT_MSG, alertTemp);
     }
 
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer)); // Aguarda até que o temporizador expire
@@ -145,12 +145,12 @@ PROCESS_THREAD(ALERT, ev, data)
     {
           // mutex_lock(&alert_mutex); // Bloqueia o mutex
 
-      if (!alert_in_use)
-      {
-        alert_in_use = 1; // Sinaliza que o recurso está em uso
+      //if (!alert_in_use)
+      //{
+        //alert_in_use = 1; // Sinaliza que o recurso está em uso
         printf("!!!!!!!!!Alert Problema (Niveis Anormais) !!!!!!!!! =-=-=-=- %s -=-=-=-=\n", (char *)data);
-        alert_in_use = 0; // Libera o recurso
-      }
+      //  alert_in_use = 0; // Libera o recurso
+    //  }
             //mutex_unlock(&alert_mutex);  // Libera o mutex
 
     }
